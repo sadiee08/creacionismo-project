@@ -1,0 +1,37 @@
+
+.header-btns {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    background: #FFFFFF;
+    border-right: 1px solid #E6EFF5;
+    height: 630px;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.header-btns button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #FFFFFF;
+    color: #B1B1B1;
+    font-weight: 500;
+    font-size: 16px;
+    width: 150px;
+    margin: 10px 0px
+}
+
+.header-btns button:hover {
+    background: #FFFFFF;
+    color: #AEB879;
+    font-size: 17px;
+}
+
+.header-btns a {
+    text-decoration: none;
+}
+
+.btn svg {
+    padding-right: 15px;
+}

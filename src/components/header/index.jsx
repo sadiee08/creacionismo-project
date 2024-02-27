@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../store/usersSlice.js";
 import "./styles.css";
 import LogoutIcon from '@mui/icons-material/Logout';
+import Logo from "../../assets/images/Logo.jpg";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -22,7 +23,11 @@ const Header = () => {
 
     return (
         <nav className="nav-style">
-            <h1>Creacionismo 104</h1>
+            <div className="h1-img-style">
+                <img src={Logo} alt="Creacionismo" className="img-style"/>
+                <h1>Creacionismo 104</h1>
+            </div>
+            
 
             <div className="header-btn">
 

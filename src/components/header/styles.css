@@ -2,16 +2,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 80%;
+    max-width: 100%; /* 80% estaba*/
     margin-left: auto;
     background-color: #AEB879;
-}
-
-.nav-style h1 {
-    color: #F6F6F6;
-    font-weight: 400;
-    font-size: 28px;
-    padding-left: 5%;
 }
 
 .btn-logout {
@@ -30,5 +23,24 @@
 }
 
 .header-btn {
-    margin-right: 5%;
+    margin-right: 3%;
+}
+
+.nav-style h1 {
+    color: #F6F6F6;
+    font-weight: 400;
+    font-size: 28px;
+}
+
+.img-style {
+    width: 60px;
+    margin-right: 190px; 
+    margin-left: 2%;
+}
+
+.h1-img-style {
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+    align-items: center;
 }
