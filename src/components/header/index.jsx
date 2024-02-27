@@ -1,25 +1,36 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { signOut } from "firebase/auth";
-// import { useAuth } from "../../contexts/authContext";
+import { auth } from "../../firebase/config.js";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../store/usersSlice.js";
+import "./styles.css";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Header = () => {
-    const navigate = useNavigate();
-    const { userLoggedIn } = useAuth();
+    const dispatch = useDispatch();
+
+    function handleSignOut() {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            dispatch(setUser(null));
+        }).catch((error) => {
+            // An error happened.
+            console.log(error);
+        });
+    }
+
     return (
-        <nav className="flex flex-row w-full">
-            {
-                // userLoggedIn 
-                // ? 
-                // <>
-                //     <button onClick={() => {doSignOut().then(() => { navigate('/login') }) }} className="p-2">Logout</button>
-                // </>
-                // :
-                // <>
-                //     <Link className='text-sm text-blue-600 underline' to={'/login'}>Login</Link>
-                // </>
-                
-            }
+        <nav className="nav-style">
+            <h1>Creacionismo 104</h1>
+
+            <div className="header-btn">
+
+                <button onClick={handleSignOut} className="btn-logout">
+                   <LogoutIcon></LogoutIcon>
+                </button>
+
+            </div>
         </nav>
     )
 }
