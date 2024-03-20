@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/config.js";
@@ -9,6 +10,9 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
+import { useLocation } from "react-router-dom";
+
+import Catalogos from '../../pages/catalogos/index.jsx';
 
 const Menu = () => {
 
@@ -24,39 +28,38 @@ const Menu = () => {
         });
     }
 
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        console.log("Ruta actual:", pathname);
+    }, [pathname]);
+
     return (
         <>
-            <Header />
+            <div className='display-menu'>
+                <div className="header-btns">
 
-            <div className="header-btns">
-
-                <NavLink to="/">
-                    <button className="btn">
+                    <NavLink to="/" className="btn" style={({ isActive }) => isActive ? { color: '#AEB879', fontWeight: '600' } : { color: '#B1B1B1' } }>
                         <HomeRoundedIcon></HomeRoundedIcon>
                         Dashboard
-                    </button>
-                </NavLink>
+                    </NavLink>
 
-                <NavLink to="/add-book">
-                    <button className="btn">
+                    <NavLink to="/menu-catalogos" className="btn" style={({ isActive }) => isActive ? { color: '#AEB879', fontWeight: '600' } : { color: '#B1B1B1' } }>
                         <StorageRoundedIcon></StorageRoundedIcon>
                         Catálogos
-                    </button>
-                </NavLink>
+                    </NavLink>
 
-                <NavLink to="/add-book">
-                    <button className="btn">
+                    <NavLink to="/pedidos" className="btn" style={({ isActive }) => isActive ? { color: '#AEB879', fontWeight: '600' } : { color: '#B1B1B1' } }>
                         <ShoppingBasketRoundedIcon></ShoppingBasketRoundedIcon>
                         Pedidos
-                    </button>
-                </NavLink>
+                    </NavLink>
 
-                <NavLink to="/add-book">
-                    <button className="btn">
+                    <NavLink to="/configuracion" className="btn" style={({ isActive }) => isActive ? { color: '#AEB879', fontWeight: '600' } : { color: '#B1B1B1' } }>
                         <SettingsRoundedIcon></SettingsRoundedIcon>
                         Configuración
-                    </button>
-                </NavLink>
+                    </NavLink>
+
+                </div>
 
             </div>
 

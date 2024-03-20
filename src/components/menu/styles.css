@@ -10,7 +10,19 @@
     padding-top: 20px;
 }
 
-.header-btns button {
+.header-btns a {
+    text-decoration: none;
+}
+
+.btn svg {
+    padding-right: 15px;
+}
+
+.display-menu {
+    display: flex;
+}
+
+.btn {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -22,16 +34,8 @@
     margin: 10px 0px
 }
 
-.header-btns button:hover {
+.btn:hover {
     background: #FFFFFF;
-    color: #AEB879;
+    color: #AEB879 !important;
     font-size: 17px;
-}
-
-.header-btns a {
-    text-decoration: none;
-}
-
-.btn svg {
-    padding-right: 15px;
 }
