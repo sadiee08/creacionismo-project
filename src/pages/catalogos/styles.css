@@ -1,3 +1,14 @@
 .display-menu {
     display: flex;
 }
+
+.menu-align {
+    width: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.width-menu {
+    margin: 0 auto; 
+}
