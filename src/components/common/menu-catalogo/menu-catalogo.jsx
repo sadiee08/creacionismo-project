@@ -9,7 +9,7 @@ const MenuCatalogo = ({ imagen, texto }) => {
             <div className="cuadro">
                 <a href="#">
                     <div className="contenedor-imagen">
-                        <img src={imagen} alt="Pedestales" />
+                        <img src={imagen} alt={texto} />
                         <div className="texto-imagen">{texto}</div>
                     </div>
                 </a>
