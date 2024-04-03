@@ -9,7 +9,6 @@ import Aire from "../../assets/images/aire.jpg"
 import Ceramica from "../../assets/images/ceramica.jpg"
 import Concreto from "../../assets/images/concreto.jpg"
 import Tierra from "../../assets/images/tierra.jpg"
-import { Margin } from "@mui/icons-material";
 
 
 const Catalogos = () => {
@@ -24,20 +23,20 @@ const Catalogos = () => {
                         <div className="width-menu">
                             <div className="total-count-center">
                                 <div className="total-count-align">
-                                    <TotalCount imagen={Pedestales} texto={"Pedestales"} />
-                                    <TotalCount imagen={Aire} texto={"Aire"} />
-                                    <TotalCount imagen={Ceramica} texto={"Cerámica"} />
-                                    <TotalCount imagen={Concreto} texto={"Concreto"} />
-                                    <TotalCount imagen={Tierra} texto={"Tierra"} />
+                                    <TotalCount imagen={Pedestales} texto={"Pedestales"} producto={"pedestales"}/>
+                                    <TotalCount imagen={Aire} texto={"Aire"} producto={"maceta-aire"} />
+                                    <TotalCount imagen={Ceramica} texto={"Cerámica"} producto={"maceta-ceramica"} />
+                                    <TotalCount imagen={Concreto} texto={"Concreto"} producto={"maceta-concreto"} />
+                                    <TotalCount imagen={Tierra} texto={"Tierra"} producto={"maceta-tierra"} />
                                 </div>
                             </div>
 
                             <div className="menu-align">
-                                <MenuCatalogo imagen={Pedestales} texto={"Pedestales"} />
-                                <MenuCatalogo imagen={Aire} texto={"Maceta Aire"} />
-                                <MenuCatalogo imagen={Ceramica} texto={"Maceta Cerámica"} />
-                                <MenuCatalogo imagen={Concreto} texto={"Maceta Concreto"} />
-                                <MenuCatalogo imagen={Tierra} texto={"Maceta Tierra"} />
+                                <MenuCatalogo imagen={Pedestales} texto={"Pedestales"} url={"pedestales"} />
+                                <MenuCatalogo imagen={Aire} texto={"Maceta Aire"} url={"maceta-aire"} />
+                                <MenuCatalogo imagen={Ceramica} texto={"Maceta Cerámica"} url={"maceta-ceramica"} />
+                                <MenuCatalogo imagen={Concreto} texto={"Maceta Concreto"} url={"maceta-concreto"} />
+                                <MenuCatalogo imagen={Tierra} texto={"Maceta Tierra"} url={"maceta-tierra"} />
                             </div>
 
                         </div>
