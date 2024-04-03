@@ -4,15 +4,12 @@ import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/config.js";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../store/usersSlice.js";
-import Header from "../header/index.jsx";
 import "./styles.css";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import StorageRoundedIcon from '@mui/icons-material/StorageRounded';
 import ShoppingBasketRoundedIcon from '@mui/icons-material/ShoppingBasketRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import { useLocation } from "react-router-dom";
-
-import Catalogos from '../../pages/catalogos/index.jsx';
 
 const Menu = () => {
 
