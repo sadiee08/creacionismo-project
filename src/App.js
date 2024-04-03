@@ -7,6 +7,7 @@ import  Home from './pages/home/index.jsx';
 import  Catalogos from './pages/catalogos/index.jsx';
 import Pedidos from './pages/pedidos/index.jsx';
 import Configuracion from './pages/configuracion/index.jsx';
+import Producto from './pages/producto/producto.jsx';
 
 function App() {
   const user = useSelector(selectUsers);
@@ -16,10 +17,19 @@ function App() {
       { user.currentUser ?
       <BrowserRouter>
         <Routes>
+          {/* Menu */}
           <Route index element={<Home />}  />
           <Route path="/menu-catalogos" element={<Catalogos />} />
           <Route path="/pedidos" element={<Pedidos />} />
           <Route path="/configuracion" element={<Configuracion />} />
+
+          {/* menu-catalogos */}
+          <Route path="/menu-catalogos/pedestales" element={<Producto producto={"pedestales"} titulo={"Pedestales"} />} />
+          <Route path="/menu-catalogos/maceta-aire" element={<Producto producto={"maceta-aire"} titulo={"Macetas Aire"}/>} />
+          <Route path="/menu-catalogos/maceta-ceramica" element={<Producto producto={"maceta-ceramica"} titulo={"Macetas Cerámica"}/>} />
+          <Route path="/menu-catalogos/maceta-concreto" element={<Producto producto={"maceta-concreto"} titulo={"Macetas Concreto"}/>} />
+          <Route path="/menu-catalogos/maceta-tierra" element={<Producto producto={"maceta-tierra"} titulo={"Macetas Tierra"}/>} />
+
         </Routes>
       </BrowserRouter> 
       :
