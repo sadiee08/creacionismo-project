@@ -6,7 +6,6 @@ import { collection, getDocs } from 'firebase/firestore';
 
 const TotalCount = ({ imagen, texto, producto, totalProdutos }) => {
     const [total, setTotal] = useState(0);
-    console.log(producto)
 
     useEffect(() => {
         const fetchTotal = async () => {
@@ -19,6 +18,11 @@ const TotalCount = ({ imagen, texto, producto, totalProdutos }) => {
     }, []);
 
     let totalAux = totalProdutos ? totalProdutos : total;
+    if (totalProdutos) {
+        totalAux = totalProdutos;
+    } else if (totalProdutos === 0) {
+        totalAux = totalProdutos;
+    }
 
 
     return (
