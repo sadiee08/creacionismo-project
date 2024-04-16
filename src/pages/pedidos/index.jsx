@@ -4,12 +4,13 @@ import Menu from "../../components/menu/menu";
 import Header from "../../components/header";
 
 import { db } from '../../firebase/config'
-import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import { DataGrid } from '@mui/x-data-grid';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -21,11 +22,18 @@ const Pedido = () => {
     const producto = 'pedidos';
     const titulo = 'Pedidos';
 
+    const [idEdit, setIdEdit] = useState(0);
+
     const [data, setData] = useState([]);
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [openEdit, setOpenEdit] = React.useState(false);
+    const handleOpenEdit = () => setOpenEdit(true);
+    const handleCloseEdit = () => setOpenEdit(false);
+
 
     const [formData, setFormData] = useState({
         name: '',
@@ -106,6 +114,23 @@ const Pedido = () => {
         }
     };
 
+    const handleEdit = async (id) => {
+        handleOpenEdit();
+
+        try {
+            const docRef = doc(db, producto, id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setFormData(docSnap.data());
+                setIdEdit(id);
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     const columns = [
         { field: 'id', headerName: '#', width: 50 },
         { field: 'name', headerName: 'Nombre', width: 190 },
@@ -123,6 +148,10 @@ const Pedido = () => {
             renderCell: (params) => {
                 return (
                     <div className='actions-display'>
+
+                        <button onClick={() => handleEdit(params.row.idGuid)}>
+                            <ModeEditIcon style={{ fontSize: '18px' }}></ModeEditIcon>
+                        </button>
                         <button onClick={() => handleDelete(params.row.idGuid)}>
                             <DeleteIcon style={{ fontSize: '18px' }}></DeleteIcon>
                         </button>
@@ -177,6 +206,30 @@ const Pedido = () => {
         window.open(file);
     };
 
+    const handleSubmit = async (event) => {
+        event.preventDefault(); // Previene la recarga de la página
+        const docRef = doc(db, producto, idEdit);     
+    
+        try {
+            await updateDoc(docRef, {
+                ...formData
+            });
+            handleCloseEdit();
+            //limpiar formulario
+            setFormData({
+                name: '',
+                cellphone: '',
+                email: '',
+                trackingNumber: '',
+                status: '',
+                paymentStatus: '',
+                total: 0,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
     return (
         <div>
             <Header />
@@ -212,7 +265,7 @@ const Pedido = () => {
 
                                     <div>
                                         <TextField className='modal-style' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
-                                        <TextField className='modal-style' id="outlined-basic" label="Correo" variant="outlined" type="text" name="email" onChange={handleInputChange} value={formData.email} />
+                                        <TextField className='modal-style' id="outlined-basic" label="Correo" variant="outlined" type="email" name="email" onChange={handleInputChange} value={formData.email} />
 
                                         <div className='display-textfield'>
                                             <TextField className='modal-style text' id="outlined-basic" label="Teléfono" variant="outlined" type="tel" name="cellphone" onChange={handleInputChange} value={formData.cellphone} />
@@ -243,7 +296,7 @@ const Pedido = () => {
                                                 select
                                                 defaultValue=""
                                                 name="status"
-                                                label="Estatus"
+                                                label="Estatus de envío"
                                                 value={formData.status}
                                                 onChange={handleInputChange}
                                             >
@@ -255,7 +308,7 @@ const Pedido = () => {
                                             </TextField>
                                         </div>
 
-                                        <TextField className='modal-style' id="outlined-basic" label="Cantidad" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+                                        <TextField className='modal-style' id="outlined-basic" label="Total a pagar" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
 
                                         <div className='button-modal-style'>
                                             <button type="submit">Crear</button>
@@ -275,6 +328,76 @@ const Pedido = () => {
                             rowsPerPageOptions={[5]}
                         />
                     </div>
+
+                    <Modal
+                        open={openEdit}
+                        onClose={handleCloseEdit}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                    >
+                        <Box sx={style}>
+                            <form onSubmit={handleSubmit}>
+                                <div className='title-close'>
+                                    <h2> Editar pedido </h2>
+                                    <div className='close-icon'>
+                                        <CloseIcon onClick={handleCloseEdit} style={{ fontSize: '25px' }}></CloseIcon>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <TextField className='modal-style' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
+                                    <TextField className='modal-style' id="outlined-basic" label="Correo" variant="outlined" type="email" name="email" onChange={handleInputChange} value={formData.email} />
+
+                                    <div className='display-textfield'>
+                                        <TextField className='modal-style text' id="outlined-basic" label="Teléfono" variant="outlined" type="tel" name="cellphone" onChange={handleInputChange} value={formData.cellphone} />
+                                        <TextField className='modal-style text' id="outlined-basic" label="No. Rastreo" variant="outlined" type="text" name="trackingNumber" onChange={handleInputChange} value={formData.trackingNumber} />
+                                    </div>
+
+                                    <div className='display-textfield'>
+                                        <TextField
+                                            className='modal-style text'
+                                            id="outlined-select-currency"
+                                            select
+                                            defaultValue=""
+                                            name="paymentStatus"
+                                            label="Estatus de pago"
+                                            value={formData.paymentStatus}
+                                            onChange={handleInputChange}
+                                        >
+                                            {paymentStatus.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.value}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+
+                                        <TextField
+                                            className='modal-style text'
+                                            id="outlined-select-currency"
+                                            select
+                                            defaultValue=""
+                                            name="status"
+                                            label="Estatus de envío"
+                                            value={formData.status}
+                                            onChange={handleInputChange}
+                                        >
+                                            {status.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.value}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </div>
+
+                                    <TextField className='modal-style' id="outlined-basic" label="Total a pagar" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+
+                                    <div className='button-modal-style'>
+                                        <button type="submit">Editar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </Box>
+                    </Modal>
                 </div>
 
             </div>
