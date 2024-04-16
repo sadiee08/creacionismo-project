@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import "./styles.css";
 
 import { db } from '../../../firebase/config';
-import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc, updateDoc, increment } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc, updateDoc, increment, getDoc } from 'firebase/firestore';
 
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
 
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
@@ -24,6 +25,11 @@ const Crud = ({ producto, titulo }) => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [idEdit, setIdEdit] = useState(0);
+    const [openEdit, setOpenEdit] = React.useState(false);
+    const handleOpenEdit = () => setOpenEdit(true);
+    const handleCloseEdit = () => setOpenEdit(false);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -115,7 +121,7 @@ const Crud = ({ producto, titulo }) => {
     }
 
     const handleRemoveProduct = async (id) => {
-        try { 
+        try {
             const productoSeleccionado = doc(db, producto, id);
             await updateDoc(productoSeleccionado, {
                 total: increment(-1)
@@ -149,6 +155,9 @@ const Crud = ({ producto, titulo }) => {
                         </button>
                         <button onClick={() => handleRemoveProduct(params.row.idGuid)}>
                             <RemoveIcon style={{ fontSize: '18px' }}></RemoveIcon>
+                        </button>
+                        <button onClick={() => handleEdit(params.row.idGuid)}>
+                            <ModeEditIcon style={{ fontSize: '18px' }}></ModeEditIcon>
                         </button>
                         <button onClick={() => handleDelete(params.row.idGuid)}>
                             <DeleteIcon style={{ fontSize: '18px' }}></DeleteIcon>
@@ -192,10 +201,50 @@ const Crud = ({ producto, titulo }) => {
         const wb = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(wb, worksheet, titulo); // Replace 'My Sheet' with your desired sheet name
         const excelBuffer = xlsx.write(wb, { type: 'buffer' });
-      
+
         const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
         const file = URL.createObjectURL(blob);
         window.open(file);
+    };
+
+    const handleEdit = async (id) => {
+        handleOpenEdit();
+
+        try {
+            const docRef = doc(db, producto, id);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                setFormData(docSnap.data());
+                setIdEdit(id);
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault(); // Previene la recarga de la página
+        const docRef = doc(db, producto, idEdit);
+
+        try {
+            await updateDoc(docRef, {
+                ...formData
+            });
+            handleCloseEdit();
+
+            setFormData({
+                name: '',
+                description: '',
+                size: '',
+                color: '',
+                total: 0,
+                price: 0,
+            });
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -214,7 +263,7 @@ const Crud = ({ producto, titulo }) => {
                             </button>
 
                         </div>
-                        
+
                     </div>
 
                     <Modal
@@ -277,6 +326,59 @@ const Crud = ({ producto, titulo }) => {
                         rowsPerPageOptions={[5]}
                     />
                 </div>
+
+                <Modal
+                    open={openEdit}
+                    onClose={handleCloseEdit}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style}>
+                        <form onSubmit={handleSubmit}>
+                            <div className='title-close-crud'>
+                                <h2> Editar producto </h2>
+                                <div className='close-icon'>
+                                    <CloseIcon onClick={handleCloseEdit} style={{ fontSize: '25px' }}></CloseIcon>
+                                </div>
+                            </div>
+
+                            <div>
+                                <TextField className='modal-style-crud' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
+                                <TextField className='modal-style-crud' id="outlined-basic" label="Descripción" variant="outlined" type="text" name="description" onChange={handleInputChange} value={formData.description} />
+
+                                <TextField
+                                    className='modal-style-crud'
+                                    id="outlined-select-currency"
+                                    select
+                                    defaultValue=""
+                                    name="size"
+                                    label="Tamaño"
+                                    value={formData.size}
+                                    onChange={handleInputChange}
+                                >
+                                    {sizes.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.value}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+
+                                <TextField className='modal-style-crud' id="outlined-basic" label="Color" variant="outlined" type="text" name="color" onChange={handleInputChange} value={formData.color} />
+
+                                <div className='display-textfield'>
+                                    <TextField className='modal-style-crud text' id="outlined-basic" label="Cantidad" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+                                    <TextField className='modal-style-crud text' id="outlined-basic" label="Precio" variant="outlined" type="number" name="price" onChange={handleInputChange} value={formData.price} />
+                                </div>
+                                <div className='button-modal-style-crud'>
+                                    <button type="submit">Editar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </Box>
+                </Modal>
+
+
+
             </div>
 
 
