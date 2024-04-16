@@ -1,13 +1,13 @@
-.display {
+.display-crud {
     display: grid;
     
 }
 
-.button-display {
+.button-display-crud  {
     margin-bottom: 20px;
 }
 
-.button-display button {
+.button-display-crud  button {
     border: none;
     background-color: #AEB879;
     padding: 13px 30px;
@@ -15,20 +15,21 @@
     font-weight: 600;
 }
 
-.button-display button:hover  {
+.button-display-crud  button:hover  {
     background-color: #949e63;
 }
 
-.table-style {
-    height: 400px;
-    width: 900px;
-}
-
-.actions-display {
+.table-style-crud {
+    height: 450px;
+    width: 920px;
     display: flex;
 }
 
-.actions-display button {
+.actions-display-crud  {
+    display: flex;
+}
+
+.actions-display-crud  button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,16 +40,16 @@
     background-color: #ffffff;
 }
 
-.actions-display button:hover {
+.actions-display-crud  button:hover {
     background-color: #f6f6f6;
 }
 
-.modal-style {
+.modal-style-crud  {
     width: 100%;
     margin-top: 10px !important;
 }
 
-.display-textfield {
+.display-textfield-crud  {
     display: flex;
     justify-content: space-between;
 }
@@ -57,18 +58,18 @@
     width: 49%;
 }
 
-.title-close{
+.title-close-crud {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.button-modal-style {
+.button-modal-style-crud {
     margin-top: 15px;
     direction: rtl;
 }
 
-.button-modal-style button {
+.button-modal-style-crud button {
     border: none;
     background-color: #AEB879;
     padding: 13px 30px;
@@ -76,8 +77,12 @@
     font-weight: 600;
 }
 
-.header-display {
+.header-display-crud {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header-display-crud div button {
+    margin-left: 10px;
 }

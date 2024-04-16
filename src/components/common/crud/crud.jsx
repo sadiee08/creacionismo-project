@@ -16,6 +16,8 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
+import * as xlsx from 'xlsx';
+
 const Crud = ({ producto, titulo }) => {
     const [data, setData] = useState([]);
 
@@ -74,7 +76,6 @@ const Crud = ({ producto, titulo }) => {
                 });
                 //setData(list); Tiene TODOS los datos
                 listTable = list
-                console.log(listTable)
 
                 for (var i = 0, len = listTable.length; i < len; i++) {
                     delete listTable[i].timeStamp;
@@ -114,7 +115,7 @@ const Crud = ({ producto, titulo }) => {
     }
 
     const handleRemoveProduct = async (id) => {
-        try {
+        try { 
             const productoSeleccionado = doc(db, producto, id);
             await updateDoc(productoSeleccionado, {
                 total: increment(-1)
@@ -127,22 +128,22 @@ const Crud = ({ producto, titulo }) => {
 
     const columns = [
         { field: 'id', headerName: '#', width: 50 },
-        { field: 'name', headerName: 'Nombre', width: 190 },
-        { field: 'size', headerName: 'Tamaño', width: 100 },
-        { field: 'color', headerName: 'Color', width: 100 },
+        { field: 'name', headerName: 'Nombre', width: 200 },
+        { field: 'size', headerName: 'Tamaño', width: 130 },
+        { field: 'color', headerName: 'Color', width: 130 },
         { field: 'total', headerName: 'Cantidad', width: 100 },
         { field: 'price', headerName: 'Precio', width: 100 },
         {
             field: 'actions',
             headerName: 'Acciones',
             sortable: false,
-            width: 250,
+            width: 190,
             display: 'flex',
             alignItems: 'center',
             direction: "rtl",
             renderCell: (params) => {
                 return (
-                    <div className='actions-display'>
+                    <div className='actions-display-crud'>
                         <button onClick={() => handleAddProduct(params.row.idGuid)}>
                             <AddIcon style={{ fontSize: '18px' }}></AddIcon>
                         </button>
@@ -186,15 +187,34 @@ const Crud = ({ producto, titulo }) => {
         },
     ];
 
+    const generateExcel = () => {
+        const worksheet = xlsx.utils.json_to_sheet(data);
+        const wb = xlsx.utils.book_new();
+        xlsx.utils.book_append_sheet(wb, worksheet, titulo); // Replace 'My Sheet' with your desired sheet name
+        const excelBuffer = xlsx.write(wb, { type: 'buffer' });
+      
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const file = URL.createObjectURL(blob);
+        window.open(file);
+    };
+
     return (
         <>
-            <div className='display'>
-                <div className='button-display'>
-                    <div className='header-display'>
+            <div className='display-crud'>
+                <div className='button-display-crud'>
+                    <div className='header-display-crud'>
                         <h1>{titulo}</h1>
-                        <button onClick={handleOpen}>
-                            Agregar nuevo
-                        </button>
+
+                        <div>
+                            <button onClick={handleOpen}>
+                                Agregar nuevo
+                            </button>
+                            <button onClick={generateExcel}>
+                                Exportar a Excel
+                            </button>
+
+                        </div>
+                        
                     </div>
 
                     <Modal
@@ -205,7 +225,7 @@ const Crud = ({ producto, titulo }) => {
                     >
                         <Box sx={style}>
                             <form onSubmit={add}>
-                                <div className='title-close'>
+                                <div className='title-close-crud'>
                                     <h2> Agregar producto </h2>
                                     <div className='close-icon'>
                                         <CloseIcon onClick={handleClose} style={{ fontSize: '25px' }}></CloseIcon>
@@ -213,11 +233,11 @@ const Crud = ({ producto, titulo }) => {
                                 </div>
 
                                 <div>
-                                    <TextField className='modal-style' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
-                                    <TextField className='modal-style' id="outlined-basic" label="Descripción" variant="outlined" type="text" name="description" onChange={handleInputChange} value={formData.description} />
+                                    <TextField className='modal-style-crud' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
+                                    <TextField className='modal-style-crud' id="outlined-basic" label="Descripción" variant="outlined" type="text" name="description" onChange={handleInputChange} value={formData.description} />
 
                                     <TextField
-                                        className='modal-style'
+                                        className='modal-style-crud'
                                         id="outlined-select-currency"
                                         select
                                         defaultValue=""
@@ -233,13 +253,13 @@ const Crud = ({ producto, titulo }) => {
                                         ))}
                                     </TextField>
 
-                                    <TextField className='modal-style' id="outlined-basic" label="Color" variant="outlined" type="text" name="color" onChange={handleInputChange} value={formData.color} />
+                                    <TextField className='modal-style-crud' id="outlined-basic" label="Color" variant="outlined" type="text" name="color" onChange={handleInputChange} value={formData.color} />
 
                                     <div className='display-textfield'>
-                                        <TextField className='modal-style text' id="outlined-basic" label="Cantidad" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
-                                        <TextField className='modal-style text' id="outlined-basic" label="Precio" variant="outlined" type="number" name="price" onChange={handleInputChange} value={formData.price} />
+                                        <TextField className='modal-style-crud text' id="outlined-basic" label="Cantidad" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+                                        <TextField className='modal-style-crud text' id="outlined-basic" label="Precio" variant="outlined" type="number" name="price" onChange={handleInputChange} value={formData.price} />
                                     </div>
-                                    <div className='button-modal-style'>
+                                    <div className='button-modal-style-crud'>
                                         <button type="submit">Crear</button>
                                     </div>
                                 </div>
@@ -249,7 +269,7 @@ const Crud = ({ producto, titulo }) => {
                 </div>
 
 
-                <div className='table-style'>
+                <div className='table-style-crud'>
                     <DataGrid
                         rows={data}
                         columns={columns}
