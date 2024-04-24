@@ -66,6 +66,10 @@
     width: 49%;
 }
 
+.text-3 {
+    width: 32%;
+}
+
 .title-close{
     display: flex;
     justify-content: space-between;

@@ -1,0 +1,15 @@
+.text-head {
+    font-weight: 600;
+}
+
+.btn-delete {
+    margin-right: 15px;
+    height: 30px;
+    border-radius: 40%;
+    border: none;
+    background-color: #ffffff;
+}
+
+.table-margin {
+    margin-top: 10px;
+}

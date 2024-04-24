@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import './style.css';
 import Menu from "../../components/menu/menu";
 import Header from "../../components/header";
+import BasicTable from "../../components/common/basic-table"
 
 import { db } from '../../firebase/config'
-import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp, onSnapshot, deleteDoc, doc, getDoc, updateDoc, getDocs } from 'firebase/firestore';
 
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -16,6 +17,9 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import Autocomplete from '@mui/material/Autocomplete';
+
+import emailjs from '@emailjs/browser';
 
 const Pedido = () => {
 
@@ -34,6 +38,8 @@ const Pedido = () => {
     const handleOpenEdit = () => setOpenEdit(true);
     const handleCloseEdit = () => setOpenEdit(false);
 
+    const [searchResults, setSearchResults] = useState([]);
+    const [selectedValues, setSelectedValues] = useState([]);
 
     const [formData, setFormData] = useState({
         name: '',
@@ -43,6 +49,7 @@ const Pedido = () => {
         status: '',
         paymentStatus: '',
         total: 0,
+        products: []
     });
 
     const handleInputChange = (e) => {
@@ -55,8 +62,13 @@ const Pedido = () => {
         try {
             const res = await addDoc(collection(db, producto), {
                 ...formData,
+                products: selectedValues,
                 timeStamp: serverTimestamp()
             });
+
+            if (formData.status === 'Enviado') {
+                handleSendMail(formData.email, formData.name);
+            }
 
             setFormData({
                 name: '',
@@ -65,7 +77,7 @@ const Pedido = () => {
                 trackingNumber: '',
                 status: '',
                 paymentStatus: '',
-                total: 0,
+                total: 0
             });
             handleClose();
 
@@ -167,7 +179,7 @@ const Pedido = () => {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 500,
+        width: 700,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
@@ -208,8 +220,8 @@ const Pedido = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault(); // Previene la recarga de la página
-        const docRef = doc(db, producto, idEdit);     
-    
+        const docRef = doc(db, producto, idEdit);
+
         try {
             await updateDoc(docRef, {
                 ...formData
@@ -224,9 +236,52 @@ const Pedido = () => {
                 status: '',
                 paymentStatus: '',
                 total: 0,
+                products: []
             });
         } catch (err) {
             console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const collections = ['maceta-aire', 'maceta-ceramica', 'maceta-concreto', 'maceta-tierra', 'pedestales'];
+            let combinedData = [];
+
+            for (const collectionName of collections) {
+                const collectionRef = collection(db, collectionName);
+                const querySnapshot = await getDocs(collectionRef);
+                const data = querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+                combinedData = [...combinedData, ...data];
+            }
+
+            setSearchResults(combinedData); // Set initial results without filtering
+        };
+
+        fetchData();
+    }, []); // Empty dependency array to fetch data only once on component mount
+
+    const handleSearchChange = (event, value) => {
+        if (value) {
+          setSelectedValues([...selectedValues, value]);
+        }
+        console.log(selectedValues);
+    };
+
+    const handleSendMail = async (email, name) => {
+        const mail = {
+            from: "abbysosa408@gmail.com",
+            to: email,
+            subject: "Pedido enviado",
+            text: "Su pedido ha sido enviado",
+            name: name
+        };
+
+        try {
+            await emailjs.send('service_6670l3k', 'template_d67w6om', mail, 'pY7FcAmEEru1Uqgdj');
+            console.log('Email sent successfully');
+        } catch (error) {
+            console.log('Failed to send email', error.text);
         }
     };
 
@@ -264,8 +319,10 @@ const Pedido = () => {
                                     </div>
 
                                     <div>
-                                        <TextField className='modal-style' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
-                                        <TextField className='modal-style' id="outlined-basic" label="Correo" variant="outlined" type="email" name="email" onChange={handleInputChange} value={formData.email} />
+                                        <div className='display-textfield'>
+                                            <TextField className='modal-style text' id="outlined-basic" label="Nombre" variant="outlined" type="text" name="name" onChange={handleInputChange} value={formData.name} />
+                                            <TextField className='modal-style text' id="outlined-basic" label="Correo" variant="outlined" type="email" name="email" onChange={handleInputChange} value={formData.email} />
+                                        </div>
 
                                         <div className='display-textfield'>
                                             <TextField className='modal-style text' id="outlined-basic" label="Teléfono" variant="outlined" type="tel" name="cellphone" onChange={handleInputChange} value={formData.cellphone} />
@@ -274,7 +331,7 @@ const Pedido = () => {
 
                                         <div className='display-textfield'>
                                             <TextField
-                                                className='modal-style text'
+                                                className='modal-style text-3'
                                                 id="outlined-select-currency"
                                                 select
                                                 defaultValue=""
@@ -291,7 +348,7 @@ const Pedido = () => {
                                             </TextField>
 
                                             <TextField
-                                                className='modal-style text'
+                                                className='modal-style text-3'
                                                 id="outlined-select-currency"
                                                 select
                                                 defaultValue=""
@@ -306,9 +363,34 @@ const Pedido = () => {
                                                     </MenuItem>
                                                 ))}
                                             </TextField>
+
+                                            <TextField className='modal-style text-3' id="outlined-basic" label="Total a pagar" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+
                                         </div>
 
-                                        <TextField className='modal-style' id="outlined-basic" label="Total a pagar" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
+                                        <div>
+                                            <Autocomplete
+                                                className='modal-style text'
+                                                freeSolo
+                                                id="free-solo-2-demo"
+                                                disableClearable
+                                                options={searchResults.map((option) => option.name)}
+                                                onChange={handleSearchChange}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        {...params}
+                                                        label="Search input"
+                                                        InputProps={{
+                                                            ...params.InputProps,
+                                                            type: 'search',
+                                                        }}
+                                                    />
+                                                )}
+                                            />
+
+                                            <BasicTable selectedValues={selectedValues} />
+                                        </div>
+
 
                                         <div className='button-modal-style'>
                                             <button type="submit">Crear</button>
@@ -391,6 +473,8 @@ const Pedido = () => {
 
                                     <TextField className='modal-style' id="outlined-basic" label="Total a pagar" variant="outlined" type="number" name="total" onChange={handleInputChange} value={formData.total} />
 
+                                    <BasicTable selectedValues={formData.products} />
+
                                     <div className='button-modal-style'>
                                         <button type="submit">Editar</button>
                                     </div>
@@ -398,6 +482,7 @@ const Pedido = () => {
                             </form>
                         </Box>
                     </Modal>
+
                 </div>
 
             </div>
