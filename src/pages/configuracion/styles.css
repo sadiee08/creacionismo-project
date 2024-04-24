@@ -1,3 +1,20 @@
+.con {
+    background-color: #F6F6F6;
+}
+
 .display-menu {
     display: flex;
+}
+
+.container-config {
+    width: 100%;
+    margin-left: 30px;
+}
+
+.btn-password {
+    border: none;
+    background-color: #AEB879;
+    padding: 13px 30px;
+    color: #ffffff;
+    font-weight: 600;
 }
