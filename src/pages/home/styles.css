@@ -1,3 +1,99 @@
+.con{
+    background-color: #F6F6F6;
+}
+
 .display-menu {
     display: flex;
+}
+
+.container-dashboard {
+    width: 100%;
+    margin-left: 30px;
+}
+
+.container-dashboard div {
+    display: flex;
+    margin-right: 30px;
+    margin-bottom: 10px;
+}
+
+.display-title-container {
+    flex-direction: column;
+}
+
+.display-title-container table {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    width: 800px;
+    height: 100%;
+}
+
+.display-title-container-2 {
+    flex-direction: column;
+    margin-left: 30px;
+
+}
+
+.display-title-container-2 table{
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    width: auto;
+}
+
+.line-header th {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #353535;
+}
+
+.center-body td {
+    margin-top: 5px;
+    text-align: center;
+}
+
+.color-td {
+    color: #EAB35A;
+    font-weight: 500;
+}
+
+.img-size img {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+}
+
+.left-body-acabar {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between
+}
+
+.left-body-acabar td{
+    margin-right: 10px;
+}
+
+.color-td-acabar {
+    color: #FF4B4A;
+    font-weight: 500;
+}
+
+.bar-chart-style {
+    background-color: white;
+    width: 800px;
+    border-radius: 10px;
+}
+
+.pie-chart-style {
+    background-color: white;
+    width: auto;
+    border-radius: 10px;
+    padding: 20px;
+    height: 100%;
+    align-items: center;
+}
+
+.display-title-container-bar {
+    flex-direction: column;
 }
