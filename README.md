@@ -1,3 +1,6 @@
+# Creacionismo web app
+Creacionismo is a web page that I made with React, using mainly the MUI X library for the components. This project is my final project of my certificate in web application development.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
